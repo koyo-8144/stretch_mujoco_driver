@@ -20,6 +20,9 @@ class StatusStretchSensors:
     base_imu: np.ndarray | None = None
     lidar: np.ndarray | None = None
 
+    left_finger_force: np.ndarray | None = None
+    right_finger_force: np.ndarray | None = None
+
     def get_data(self, sensor: StretchSensors) -> np.ndarray:
         """
         Use this to match a StretchSensors enum instance with its property in StatusStretchSensors dataclass, to get the camera data property.
@@ -34,6 +37,10 @@ class StatusStretchSensors:
             data = self.base_imu
         elif sensor == StretchSensors.base_lidar:
             data = self.lidar
+        elif sensor == StretchSensors.sensor_force_left_finger:
+            data = self.left_finger_force
+        elif sensor == StretchSensors.sensor_force_right_finger:
+            data = self.right_finger_force
 
         if data is None:
             raise ValueError(f"Tried to get {sensor} data, but it is empty.")
@@ -55,6 +62,12 @@ class StatusStretchSensors:
             return
         if sensor == StretchSensors.base_lidar:
             self.lidar = value
+            return
+        if sensor == StretchSensors.sensor_force_left_finger:
+            self.left_finger_force = value
+            return
+        if sensor == StretchSensors.sensor_force_right_finger:
+            self.right_finger_force = value
             return
 
         raise NotImplementedError(f"Sensor {sensor} is not implemented")

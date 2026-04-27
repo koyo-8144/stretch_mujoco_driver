@@ -103,6 +103,7 @@ class PnPCoffee(Kitchen):
             )
         elif self.behavior == "machine_to_counter":
             contact_check = OU.check_obj_fixture_contact(self, "obj", self.counter)
+
         return contact_check and gripper_obj_far
 
 

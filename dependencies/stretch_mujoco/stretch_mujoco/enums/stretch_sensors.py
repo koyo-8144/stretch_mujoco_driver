@@ -13,6 +13,8 @@ class StretchSensors(Enum):
     base_gyro = 0
     base_accel = 1
     base_lidar = 2
+    sensor_force_left_finger = 3
+    sensor_force_right_finger = 4
 
     @staticmethod
     def all() -> list["StretchSensors"]:

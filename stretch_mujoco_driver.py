@@ -617,6 +617,19 @@ class StretchMujocoDriver(Node):
         # publish IMU sensor data
         sensor_status = self.sim.pull_sensor_data()
 
+        try:
+            left_force = sensor_status.get_data(StretchSensors.sensor_force_left_finger)
+            right_force = sensor_status.get_data(StretchSensors.sensor_force_right_finger)
+            
+            # print("left_force:", left_force)
+            # print("right_force:", right_force)
+            
+            # left_force[0] will contain the scalar force in Newtons.
+            # You can publish this using a standard Float64 or WrenchStamped ROS message.
+            # self.get_logger().debug(f"Left Finger Force: {left_force[0]} N")
+        except ValueError:
+            pass
+
         accel_status = sensor_status.get_data(StretchSensors.base_accel)
         gyro_status = sensor_status.get_data(StretchSensors.base_gyro)
         ax = accel_status[0]
