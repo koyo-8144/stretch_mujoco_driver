@@ -55,7 +55,7 @@ from cv_bridge import CvBridge
 
 from rcl_interfaces.msg import ParameterDescriptor, ParameterType, SetParametersResult
 from sensor_msgs.msg import BatteryState, JointState, Imu, MagneticField, Joy
-from std_msgs.msg import Bool, String, Float64MultiArray
+from std_msgs.msg import Bool, String, Float64MultiArray, Float64
 
 from hello_helpers.joint_qpos_conversion import SE3_dw3_sg3_Idx
 from hello_helpers.joint_qpos_conversion import get_Idx
@@ -623,10 +623,18 @@ class StretchMujocoDriver(Node):
             
             # print("left_force:", left_force)
             # print("right_force:", right_force)
+
+            # Create the messages
+            left_msg = Float64()
+            right_msg = Float64()
             
-            # left_force[0] will contain the scalar force in Newtons.
-            # You can publish this using a standard Float64 or WrenchStamped ROS message.
-            # self.get_logger().debug(f"Left Finger Force: {left_force[0]} N")
+            # Extract the scalar force value (it returns as an array)
+            left_msg.data = float(left_force[0])
+            right_msg.data = float(right_force[0])
+            
+            # Publish to the topics
+            self.left_finger_force_pub.publish(left_msg)
+            self.right_finger_force_pub.publish(right_msg)
         except ValueError:
             pass
 
@@ -1276,6 +1284,9 @@ class StretchMujocoDriver(Node):
         )
         self.imu_wrist_pub = self.create_publisher(Imu, "imu_wrist", 1)
         self.runstop_event_pub = self.create_publisher(Bool, "is_runstopped", 1)
+
+        self.left_finger_force_pub = self.create_publisher(Float64, "/stretch/left_finger_force", 1)
+        self.right_finger_force_pub = self.create_publisher(Float64, "/stretch/right_finger_force", 1)
 
         self.is_gamepad_dongle_pub = self.create_publisher(Bool, "is_gamepad_dongle", 1)
         self.gamepad_state_pub = self.create_publisher(
